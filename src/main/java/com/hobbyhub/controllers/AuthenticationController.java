@@ -27,7 +27,7 @@ public class AuthenticationController {
 
   @Autowired private JwtUtils jwtUtils;
 
-  @PostMapping("/sign-in")
+  @PostMapping(AppUrls.SIGN_IN)
   public ResponseEntity<AuthenticationResponse> authenticateClient(
       @RequestBody SignInRequest signInRequest) {
     String username = signInRequest.getUsername();
@@ -45,11 +45,11 @@ public class AuthenticationController {
     return ResponseEntity.ok(new AuthenticationResponse("Successful user sign in", token));
   }
 
-  @PostMapping("/sign-up")
+  @PostMapping(AppUrls.SIGN_UP)
   public ResponseEntity<AuthenticationResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
     try {
       UserModel user = populateNewUserInformation(signUpRequest);
-      userService.save(user);
+      userService.newUser(user);
       authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(
               signUpRequest.getUsername(), signUpRequest.getPassword()));

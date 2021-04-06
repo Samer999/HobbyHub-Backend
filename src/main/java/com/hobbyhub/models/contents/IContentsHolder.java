@@ -1,7 +1,6 @@
 package com.hobbyhub.models.contents;
 
 import java.util.List;
-import javafx.util.Pair;
 
 public interface IContentsHolder {
 

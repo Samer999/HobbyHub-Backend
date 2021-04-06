@@ -21,7 +21,7 @@ public class PostService {
       throw new IllegalArgumentException(String.format("new post must not have id[%s]", post.getId()));
     }
     post = postRepository.save(post);
-    UserModel userModel = userRepository.findByUsername(post.getCreatorUsername());
+    UserModel userModel = userRepository.getByUsername(post.getCreatorUsername());
     userModel.addPost(post.getId());
     userRepository.save(userModel);
     return post;
@@ -40,7 +40,7 @@ public class PostService {
           + "username[%s]", post.getCreatorUsername(), username));
     }
     postRepository.delete(post);
-    UserModel userModel = userRepository.findByUsername(post.getCreatorUsername());
+    UserModel userModel = userRepository.getByUsername(post.getCreatorUsername());
     userModel.removePost(post.getId());
     userRepository.save(userModel);
   }

@@ -1,5 +1,6 @@
 package com.hobbyhub.configuration;
 
+import com.hobbyhub.controllers.AppUrls;
 import com.hobbyhub.models.jwt.JwtFilterRequest;
 import com.hobbyhub.models.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.csrf().disable().authorizeRequests()
-        .antMatchers("/sign-in", "/sign-up").permitAll().anyRequest().authenticated();
+        .antMatchers(AppUrls.SIGN_IN, AppUrls.SIGN_UP).permitAll().anyRequest().authenticated();
 
     http.addFilterBefore(jwtFilterRequest, UsernamePasswordAuthenticationFilter.class);
   }
