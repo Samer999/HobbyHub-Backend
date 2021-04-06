@@ -71,6 +71,11 @@ public class AuthenticationController {
         + SecurityContextHolder.getContext().getAuthentication().getName();
   }
 
+  @GetMapping("/test")
+  public String test() {//todo remove this
+    return "Welcome to the Dashboard ";
+  }
+
   private UserModel populateNewUserInformation(SignUpRequest signUpRequest) {
     if (!userService.isNewUsername(signUpRequest.getUsername())) {
       throw new IllegalArgumentException("Username is already used");
