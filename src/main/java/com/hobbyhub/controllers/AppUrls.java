@@ -11,6 +11,12 @@ public class AppUrls {
   public static final String POST_COMMENT = "/post/comment";
 
   public static final String USER = "/user";
+  public static final String USER_FOLLOW_USER = "/user/follow-user";
+  public static final String USER_UNFOLLOW_USER = "/user/unfollow-user";
+  public static final String USER_FOLLOW_HOBBY = "/user/follow-hobby";
+  public static final String USER_UNFOLLOW_HOBBY = "/user/unfollow-hobby";
+
+  public static final String ADMIN_HOBBY = "/admin/hobby";
 
   private AppUrls(){
     // no-op

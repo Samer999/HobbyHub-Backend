@@ -1,6 +1,7 @@
 package com.hobbyhub.controllers;
 
-import com.hobbyhub.models.users.UpdateUserRequest;
+import com.hobbyhub.models.hobbies.HobbyRequest;
+import com.hobbyhub.models.users.UserRequest;
 import com.hobbyhub.models.users.UserModel;
 import com.hobbyhub.models.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class UserController {
   }
 
   @PutMapping(AppUrls.USER)
-  public UserModel updateUser(@RequestBody UpdateUserRequest request) {
+  public UserModel updateUser(@RequestBody UserRequest request) {
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
     UserModel userModel = userService.getUserModel(username);
     populateUpdatedUserInformation(userModel, request);
@@ -33,7 +34,37 @@ public class UserController {
     return userModel;
   }
 
-  private void populateUpdatedUserInformation(UserModel userModel, UpdateUserRequest request) {
+  @PutMapping(AppUrls.USER_FOLLOW_USER)
+  public UserModel followUser(@RequestBody UserRequest userRequest) {
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    UserModel userModel = userService.getUserModel(username);
+    UserModel userToFollow = userService.getUserModel(userRequest.getUsername());
+    return userService.followUser(userModel, userToFollow);
+  }
+
+  @PutMapping(AppUrls.USER_UNFOLLOW_USER)
+  public UserModel unfollowUser(@RequestBody UserRequest userRequest) {
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    UserModel userModel = userService.getUserModel(username);
+    UserModel userToFollow = userService.getUserModel(userRequest.getUsername());
+    return userService.unfollowUser(userModel, userToFollow);
+  }
+  
+  @PutMapping(AppUrls.USER_FOLLOW_HOBBY)
+  public UserModel followHobby(@RequestBody HobbyRequest hobbyRequest) {
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    UserModel userModel = userService.getUserModel(username);
+    return userService.followHobby(userModel, hobbyRequest.getName());
+  }
+
+  @PutMapping(AppUrls.USER_UNFOLLOW_HOBBY)
+  public UserModel unfollowHobby(@RequestBody HobbyRequest hobbyRequest) {
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    UserModel userModel = userService.getUserModel(username);
+    return userService.unfollowHobby(userModel, hobbyRequest.getName());
+  }
+
+  private void populateUpdatedUserInformation(UserModel userModel, UserRequest request) {
     String firstName = request.getFirstName();
     String lastName = request.getLastName();
     String email = request.getEmail();
