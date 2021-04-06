@@ -6,6 +6,7 @@ import lombok.Data;
 public class AuthenticationResponse {
   private String message;
   private String token;
+  private UserModel userModel;
 
   public AuthenticationResponse() {}
 
@@ -13,8 +14,9 @@ public class AuthenticationResponse {
     this.message = message;
   }
 
-  public AuthenticationResponse(String message, String token) {
+  public AuthenticationResponse(String message, String token, UserModel userModel) {
     this.message = message;
     this.token = token;
+    this.userModel = userModel;
   }
 }

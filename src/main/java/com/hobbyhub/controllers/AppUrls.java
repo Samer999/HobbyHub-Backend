@@ -5,6 +5,7 @@ public class AppUrls {
 
   public static final String SIGN_IN = "/sign-in";
   public static final String SIGN_UP = "/sign-up";
+  public static final String AUTHENTICATE_CLIENT = "/authenticate-client";
 
   public static final String POST = "/post";
   public static final String POST_LIKE = "/post/like";

@@ -28,7 +28,7 @@ public class AuthenticationController {
   @Autowired private JwtUtils jwtUtils;
 
   @PostMapping(AppUrls.SIGN_IN)
-  public ResponseEntity<AuthenticationResponse> authenticateClient(
+  public ResponseEntity<AuthenticationResponse> signIn(
       @RequestBody SignInRequest signInRequest) {
     String username = signInRequest.getUsername();
     String password = signInRequest.getPassword();
@@ -41,8 +41,18 @@ public class AuthenticationController {
           new AuthenticationResponse("Error during client authentication " + username));
     }
     UserDetails userDetails = userService.loadUserByUsername(username);
+    UserModel userModel = userService.getUserModel(username);
     String token = jwtUtils.generateToken(userDetails);
-    return ResponseEntity.ok(new AuthenticationResponse("Successful user sign in", token));
+    return ResponseEntity.ok(new AuthenticationResponse("Successful user sign in", token, userModel));
+  }
+
+  @GetMapping(AppUrls.AUTHENTICATE_CLIENT)
+  public ResponseEntity<AuthenticationResponse> authenticateClient() {
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    UserDetails userDetails = userService.loadUserByUsername(username);
+    UserModel userModel = userService.getUserModel(username);
+    String token = jwtUtils.generateToken(userDetails);
+    return  ResponseEntity.ok(new AuthenticationResponse("Successful client authentication", token, userModel));
   }
 
   @PostMapping(AppUrls.SIGN_UP)
@@ -61,14 +71,9 @@ public class AuthenticationController {
       return ResponseEntity.ok(new AuthenticationResponse("Error during user creation"));
     }
     UserDetails userDetails = userService.loadUserByUsername(signUpRequest.getUsername());
+    UserModel userModel = userService.getUserModel(signUpRequest.getUsername());
     String token = jwtUtils.generateToken(userDetails);
-    return ResponseEntity.ok(new AuthenticationResponse("Successful user sign up", token));
-  }
-
-  @GetMapping("/dashboard")
-  public String testToken() {//todo remove this
-    return "Welcome to the Dashboard "
-        + SecurityContextHolder.getContext().getAuthentication().getName();
+    return ResponseEntity.ok(new AuthenticationResponse("Successful user sign up", token, userModel));
   }
 
   private UserModel populateNewUserInformation(SignUpRequest signUpRequest) {
