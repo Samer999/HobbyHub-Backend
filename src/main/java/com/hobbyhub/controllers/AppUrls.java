@@ -16,6 +16,8 @@ public class AppUrls {
   public static final String USER_FOLLOW_HOBBY = "/user/follow-hobby";
   public static final String USER_UNFOLLOW_HOBBY = "/user/unfollow-hobby";
 
+  public static final String GET_ALL_HOBBIES = "/hobby/all";
+
   public static final String ADMIN_HOBBY = "/admin/hobby";
 
   private AppUrls(){
