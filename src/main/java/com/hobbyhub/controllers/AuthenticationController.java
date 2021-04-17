@@ -8,6 +8,7 @@ import com.hobbyhub.models.users.UserModel;
 import com.hobbyhub.models.users.UserService;
 import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,7 +38,7 @@ public class AuthenticationController {
           new UsernamePasswordAuthenticationToken(username, password));
     } catch (Exception e) {
       e.printStackTrace();
-      return ResponseEntity.ok(
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
           new AuthenticationResponse("Error during client authentication " + username));
     }
     UserDetails userDetails = userService.loadUserByUsername(username);
@@ -64,11 +65,11 @@ public class AuthenticationController {
           new UsernamePasswordAuthenticationToken(
               signUpRequest.getUsername(), signUpRequest.getPassword()));
     } catch (IllegalArgumentException e) {
-      return ResponseEntity.ok(
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
           new AuthenticationResponse(
               String.format("Username[%s] already used", signUpRequest.getUsername())));
     } catch (Exception e) {
-      return ResponseEntity.ok(new AuthenticationResponse("Error during user creation"));
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AuthenticationResponse("Error during user creation"));
     }
     UserDetails userDetails = userService.loadUserByUsername(signUpRequest.getUsername());
     UserModel userModel = userService.getUserModel(signUpRequest.getUsername());
