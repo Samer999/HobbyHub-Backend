@@ -5,6 +5,8 @@ import com.hobbyhub.models.likes.Like;
 import com.hobbyhub.models.users.UserModel;
 import com.hobbyhub.models.users.UserRepository;
 import java.util.Date;
+import java.util.List;
+
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,4 +83,9 @@ public class PostService {
     post.removeComment(commentId);
     update(post);
   }
+
+  public List<Post> Trendingposts(){
+    return postRepository.findTop10BygetPostByLikesHolder_NumberOfLikes();
+  }
+
 }

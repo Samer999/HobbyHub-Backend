@@ -8,6 +8,8 @@ import com.hobbyhub.models.posts.PostService;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -139,5 +141,11 @@ public class PostController {
 
   private boolean isCreator(Post post, String username) {
     return post.getCreatorUsername().equals(username);
+  }
+
+  @GetMapping(AppUrls.POST + "/latest")
+  public List<Post> GetTrending(){
+    return postService.Trendingposts();
+
   }
 }
