@@ -14,6 +14,7 @@ import com.hobbyhub.models.likes.LikesHolder;
 import com.hobbyhub.models.users.UserCreation;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -158,5 +159,25 @@ public class Post extends UserCreation
   @Override
   public boolean addCategoryTag(String tag) {
     return categoriesHolder.addCategoryTag(tag);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    Post post = (Post) o;
+    return Objects.equals(id, post.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), id);
   }
 }

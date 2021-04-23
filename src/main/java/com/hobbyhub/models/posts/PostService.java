@@ -5,6 +5,7 @@ import com.hobbyhub.models.likes.Like;
 import com.hobbyhub.models.users.UserModel;
 import com.hobbyhub.models.users.UserRepository;
 import java.util.Date;
+import java.util.List;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,14 @@ public class PostService {
 
   public Post getPostById(@NonNull String id) {
     return postRepository.getPostById(id);
+  }
+
+  public List<Post> getPostsByCategoriesContaining(List <String> categories) {
+    return postRepository.getPostsByCategoriesHolder_CategoriesIsContainingOrderByDateCreated(categories);
+  }
+
+  public List<Post> getPostsByCreatorUsernameIn(List <String> usernames) {
+    return postRepository.getPostsByCreatorUsernameInOrderByDateCreated(usernames);
   }
 
   public void likePost(Post post, @NonNull String username) {

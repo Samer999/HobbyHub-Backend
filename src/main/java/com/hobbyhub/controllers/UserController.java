@@ -1,9 +1,11 @@
 package com.hobbyhub.controllers;
 
 import com.hobbyhub.models.hobbies.HobbyRequest;
+import com.hobbyhub.models.posts.Post;
 import com.hobbyhub.models.users.UserRequest;
 import com.hobbyhub.models.users.UserModel;
 import com.hobbyhub.models.users.UserService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,6 +64,13 @@ public class UserController {
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
     UserModel userModel = userService.getUserModel(username);
     return userService.unfollowHobby(userModel, hobbyRequest.getName());
+  }
+
+  @GetMapping(AppUrls.USER_FEED)
+  public List<Post> getFeed() {
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    UserModel userModel = userService.getUserModel(username);
+    return userService.getFeed(userModel);
   }
 
   private void populateUpdatedUserInformation(UserModel userModel, UserRequest request) {
