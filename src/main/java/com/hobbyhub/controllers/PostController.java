@@ -8,6 +8,7 @@ import com.hobbyhub.models.posts.PostService;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -111,6 +112,11 @@ public class PostController {
       e.printStackTrace();
     }
     return post;
+  }
+
+  @GetMapping(AppUrls.POST_TRENDING)
+  public List<Post> getTrending() {
+    return postService.getTrending();
   }
 
   private void populateCommentInformation(Comment comment, CommentRequest commentRequest) {

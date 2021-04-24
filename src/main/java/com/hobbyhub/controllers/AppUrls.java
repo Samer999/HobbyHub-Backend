@@ -10,6 +10,7 @@ public class AppUrls {
   public static final String POST = "/post";
   public static final String POST_LIKE = "/post/like";
   public static final String POST_COMMENT = "/post/comment";
+  public static final String POST_TRENDING = "/post/trending";
 
   public static final String USER = "/user";
   public static final String USER_FEED = "/user/feed";

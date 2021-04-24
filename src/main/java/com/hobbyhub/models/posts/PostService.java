@@ -4,8 +4,10 @@ import com.hobbyhub.models.comments.Comment;
 import com.hobbyhub.models.likes.Like;
 import com.hobbyhub.models.users.UserModel;
 import com.hobbyhub.models.users.UserRepository;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -89,5 +91,13 @@ public class PostService {
     }
     post.removeComment(commentId);
     update(post);
+  }
+
+  public List<Post> getTrending() {
+    final long DAY_IN_MS = 86400000; // 1000 * 60 * 60 * 24
+    Date date7daysAgo = new Date(System.currentTimeMillis() - (7 * DAY_IN_MS));
+    List<Post> posts = postRepository.findAll();
+    return posts.stream().filter(post -> post.getDateCreated().after(date7daysAgo))
+        .sorted((Comparator.comparingInt(Post::getNumberOfLikes))).limit(10).collect(Collectors.toList());
   }
 }
