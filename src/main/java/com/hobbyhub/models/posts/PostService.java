@@ -84,8 +84,5 @@ public class PostService {
     update(post);
   }
 
-  public List<Post> Trendingposts(){
-    return postRepository.findTop10BygetPostByLikesHolder_NumberOfLikes();
-  }
 
 }

@@ -143,9 +143,5 @@ public class PostController {
     return post.getCreatorUsername().equals(username);
   }
 
-  @GetMapping(AppUrls.POST + "/latest")
-  public List<Post> GetTrending(){
-    return postService.Trendingposts();
 
-  }
 }
