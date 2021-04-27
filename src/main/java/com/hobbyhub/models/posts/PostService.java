@@ -60,6 +60,10 @@ public class PostService {
     return postRepository.getPostsByCreatorUsernameInOrderByDateCreated(usernames);
   }
 
+  public List<Post> getPostsByIdIn(List <String> postIds) {
+    return postRepository.getPostsByIdInOrderByDateCreated(postIds);
+  }
+
   public void likePost(Post post, @NonNull String username) {
     if (post.likeIdExists(username)) {
       throw new IllegalArgumentException("post is already liked");

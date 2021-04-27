@@ -1,5 +1,6 @@
 package com.hobbyhub.models.users;
 
+import com.google.common.collect.ImmutableList;
 import com.hobbyhub.models.hobbies.HobbyRepository;
 import com.hobbyhub.models.posts.Post;
 import com.hobbyhub.models.posts.PostService;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -94,7 +96,13 @@ public class UserService implements UserDetailsService {
   public List<Post> getFeed(UserModel userModel) {
     List<Post> postsByCreatorsUsername = getPostsByCreatorsUsername(userModel.getUsersFollowing());
     List<Post> postsByCategories = getPostsByCategories(userModel.getHobbiesFollowing());
-    return removeDuplicatePosts(postsByCreatorsUsername, postsByCategories);
+    List<Post> userPosts = getPostsByIds(userModel.getPosts());
+    List<List<Post>> postLists = ImmutableList.of(postsByCreatorsUsername, postsByCategories, userPosts);
+    return orderPostListByDate(removeDuplicatePosts(postLists));
+  }
+
+  private List<Post> getPostsByIds(List<String> postIds) {
+    return postService.getPostsByIdIn(postIds);
   }
 
   private List<Post> getPostsByCreatorsUsername(List<String> usernames) {
@@ -105,10 +113,16 @@ public class UserService implements UserDetailsService {
     return postService.getPostsByCategoriesContaining(categories);
   }
 
-  private List<Post> removeDuplicatePosts(List<Post> firstPostsList, List<Post> secondPostsList) {
+  private List<Post> removeDuplicatePosts(@NonNull List<List<Post>> postLists) {
     Set<Post> setOfPosts = new HashSet<>();
-    setOfPosts.addAll(firstPostsList);
-    setOfPosts.addAll(secondPostsList);
+    for(List<Post> posts : postLists) {
+      setOfPosts.addAll(posts);
+    }
     return new ArrayList<>(setOfPosts);
+  }
+
+  private List<Post> orderPostListByDate(List<Post> posts) {
+    posts.sort((post1, post2) -> post2.getDateCreated().compareTo(post1.getDateCreated()));
+    return posts;
   }
 }
