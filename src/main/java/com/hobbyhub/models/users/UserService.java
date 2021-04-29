@@ -93,6 +93,22 @@ public class UserService implements UserDetailsService {
     userRepository.save(userModel);
   }
 
+  public List<UserModel> getFollowingUsers(UserModel userModel) {
+    List<String> followingUsersUsernames = userModel.getUsersFollowing();
+    return userRepository.getUserModelByUsernameIn(followingUsersUsernames);
+  }
+
+  public void updateUserCurrentLocation(UserModel userModel, String location) {
+    if (userModel.getId() == null) {
+      throw new IllegalArgumentException("userModel doesn't have id, can't update it");
+    }
+    if (location == null) {
+      throw new NullPointerException("location value is null");
+    }
+    userModel.setCurrentLocation(location);
+    userRepository.save(userModel);
+  }
+
   public List<Post> getFeed(UserModel userModel) {
     List<Post> postsByCreatorsUsername = getPostsByCreatorsUsername(userModel.getUsersFollowing());
     List<Post> postsByCategories = getPostsByCategories(userModel.getHobbiesFollowing());

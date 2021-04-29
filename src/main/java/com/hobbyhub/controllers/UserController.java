@@ -73,6 +73,28 @@ public class UserController {
     return userService.getFeed(userModel);
   }
 
+  @GetMapping(AppUrls.USER_LOCATION)
+  public String getCurrentLocation() {
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    UserModel userModel = userService.getUserModel(username);
+    return userModel.getCurrentLocation();
+  }
+
+  @PutMapping(AppUrls.USER_LOCATION)
+  public UserModel updateCurrentLocation(@RequestBody String location) {
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    UserModel userModel = userService.getUserModel(username);
+    userService.updateUserCurrentLocation(userModel, location);
+    return userModel;
+  }
+
+  @GetMapping(AppUrls.USER_FOLLOWING)
+  public List<UserModel> getFollowingUsers() {
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    UserModel userModel = userService.getUserModel(username);
+    return userService.getFollowingUsers(userModel);
+  }
+
   private void populateUpdatedUserInformation(UserModel userModel, UserRequest request) {
     String firstName = request.getFirstName();
     String lastName = request.getLastName();

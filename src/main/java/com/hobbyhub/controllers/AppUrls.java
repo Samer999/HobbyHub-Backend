@@ -14,6 +14,8 @@ public class AppUrls {
 
   public static final String USER = "/user";
   public static final String USER_FEED = "/user/feed";
+  public static final String USER_LOCATION = "/user/location";
+  public static final String USER_FOLLOWING = "/user/following";
   public static final String USER_FOLLOW_USER = "/user/follow-user";
   public static final String USER_UNFOLLOW_USER = "/user/unfollow-user";
   public static final String USER_FOLLOW_HOBBY = "/user/follow-hobby";
