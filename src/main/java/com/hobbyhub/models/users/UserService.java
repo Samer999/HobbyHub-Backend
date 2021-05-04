@@ -2,6 +2,12 @@ package com.hobbyhub.models.users;
 
 import com.hobbyhub.models.hobbies.HobbyRepository;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.hobbyhub.models.posts.Post;
+import com.hobbyhub.models.posts.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +20,8 @@ public class UserService implements UserDetailsService {
 
   @Autowired private UserRepository userRepository;
   @Autowired private HobbyRepository hobbyRepository;
+  @Autowired private PostService postService;
+
 
   @Override
   public UserDetails loadUserByUsername(String usernameToSearch) throws UsernameNotFoundException {
@@ -82,5 +90,43 @@ public class UserService implements UserDetailsService {
       throw new IllegalArgumentException("userModel doesn't have id, can't update it");
     }
     userRepository.save(userModel);
+  }
+
+  public List<UserModel> getFollowingUsers(UserModel userModel) {
+    List<String> followingUsersUsernames = userModel.getUsersFollowing();
+    return userRepository.getUserModelByUsernameIn(followingUsersUsernames);
+  }
+
+  public void updateUserCurrentLocation(UserModel userModel, String location) {
+    if (userModel.getId() == null) {
+      throw new IllegalArgumentException("userModel doesn't have id, can't update it");
+    }
+    if (location == null) {
+      throw new NullPointerException("location value is null");
+    }
+    userModel.setCurrentLocation(location);
+    userRepository.save(userModel);
+  }
+
+  public List<Post> getFeed(UserModel userModel) {
+    List<Post> postsByCreatorsUsername = getPostsByCreatorsUsername(userModel.getUsersFollowing());
+    List<Post> postsByCategories = getPostsByCategories(userModel.getHobbiesFollowing());
+    return removeDuplicatePosts(postsByCreatorsUsername, postsByCategories);
+  }
+
+  private List<Post> getPostsByCreatorsUsername(List<String> usernames) {
+    return postService.getPostsByCreatorUsernameIn(usernames);
+  }
+
+  private List<Post> getPostsByCategories(List<String> categories) {
+    return postService.getPostsByCategoriesContaining(categories);
+  }
+
+
+  private List<Post> removeDuplicatePosts(List<Post> firstPostsList, List<Post> secondPostsList) {
+    Set<Post> setOfPosts = new HashSet<>();
+    setOfPosts.addAll(firstPostsList);
+    setOfPosts.addAll(secondPostsList);
+    return new ArrayList<>(setOfPosts);
   }
 }

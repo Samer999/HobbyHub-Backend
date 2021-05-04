@@ -1,6 +1,7 @@
 package com.hobbyhub.controllers;
 
 import com.hobbyhub.models.hobbies.HobbyRequest;
+import com.hobbyhub.models.posts.Post;
 import com.hobbyhub.models.users.UserRequest;
 import com.hobbyhub.models.users.UserModel;
 import com.hobbyhub.models.users.UserService;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 public class UserController {
@@ -49,7 +52,7 @@ public class UserController {
     UserModel userToFollow = userService.getUserModel(userRequest.getUsername());
     return userService.unfollowUser(userModel, userToFollow);
   }
-  
+
   @PutMapping(AppUrls.USER_FOLLOW_HOBBY)
   public UserModel followHobby(@RequestBody HobbyRequest hobbyRequest) {
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -63,6 +66,38 @@ public class UserController {
     UserModel userModel = userService.getUserModel(username);
     return userService.unfollowHobby(userModel, hobbyRequest.getName());
   }
+
+  @GetMapping(AppUrls.USER_FEED)
+  public List<Post> getFeed() {
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    UserModel userModel = userService.getUserModel(username);
+    return userService.getFeed(userModel);
+  }
+
+
+  @GetMapping(AppUrls.USER_LOCATION)
+  public String getCurrentLocation() {
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    UserModel userModel = userService.getUserModel(username);
+    return userModel.getCurrentLocation();
+  }
+
+  @PutMapping(AppUrls.USER_LOCATION)
+  public UserModel updateCurrentLocation(@RequestBody String location) {
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    UserModel userModel = userService.getUserModel(username);
+    userService.updateUserCurrentLocation(userModel, location);
+    return userModel;
+  }
+
+  @GetMapping(AppUrls.USER_FOLLOWING)
+  public List<UserModel> getFollowingUsers() {
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    UserModel userModel = userService.getUserModel(username);
+    return userService.getFollowingUsers(userModel);
+  }
+
+
 
   private void populateUpdatedUserInformation(UserModel userModel, UserRequest request) {
     String firstName = request.getFirstName();

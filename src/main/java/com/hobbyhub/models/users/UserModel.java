@@ -17,6 +17,7 @@ public class UserModel {
   @NonNull private String firstName;
   @NonNull private String lastName;
   @NonNull private String gender;
+  private String currentLocation;
   private String imageUrl;
   private List<String> usersFollowing;
   private List<String> followers;
@@ -77,6 +78,14 @@ public class UserModel {
 
   public List<String> getUsersFollowing() {
     return usersFollowing;
+  }
+
+  public String getCurrentLocation() {
+    return currentLocation;
+  }
+
+  public void setCurrentLocation(String currentLocation) {
+    this.currentLocation = currentLocation;
   }
 
   public void setUsersFollowing(List<String> usersFollowing) {

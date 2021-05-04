@@ -115,6 +115,12 @@ public class PostController {
     return post;
   }
 
+  @GetMapping(AppUrls.POST_TRENDING)
+  public List<Post> getTrending() {
+    return postService.getTrending();
+  }
+
+
   private void populateCommentInformation(Comment comment, CommentRequest commentRequest) {
     if (commentRequest.getCommentId() != null) {
       comment.setCommentId(commentRequest.getCommentId());
