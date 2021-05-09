@@ -8,6 +8,7 @@ import com.hobbyhub.models.users.UserService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
   @Autowired private UserService userService;
+
+  @Autowired private PasswordEncoder passwordEncoder;
 
   @GetMapping(AppUrls.USER + "/{username}")
   public UserModel getUser(@PathVariable String username) {
@@ -112,7 +115,7 @@ public class UserController {
       userModel.setEmail(email);
     }
     if (password != null) {
-      userModel.setPassword(password);
+      userModel.setPassword(passwordEncoder.encode(password));
     }
     if (gender != null) {
       userModel.setGender(gender);

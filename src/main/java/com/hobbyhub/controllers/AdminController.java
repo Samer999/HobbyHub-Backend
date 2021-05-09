@@ -59,7 +59,7 @@ public class AdminController {
 
   private void checkAdmin() {
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    if (!SecurityConfiguration.adminUsername.equals(username)) {
+    if (!SecurityConfiguration.ADMIN_USERNAME.equals(username)) {
       throw new IllegalArgumentException("forbidden, must be ADMIN");
     }
   }

@@ -14,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +28,8 @@ public class AuthenticationController {
   @Autowired private UserService userService;
 
   @Autowired private JwtUtils jwtUtils;
+
+  @Autowired private PasswordEncoder passwordEncoder;
 
   @PostMapping(AppUrls.SIGN_IN)
   public ResponseEntity<AuthenticationResponse> signIn(
@@ -88,7 +91,7 @@ public class AuthenticationController {
         .lastName(signUpRequest.getLastName())
         .gender(signUpRequest.getGender())
         .imageUrl(signUpRequest.getImageUrl())
-        .password(signUpRequest.getPassword())
+        .password(passwordEncoder.encode(signUpRequest.getPassword()))
         .followers(Collections.emptyList())
         .hobbiesFollowing(Collections.emptyList())
         .usersFollowing(Collections.emptyList())
