@@ -25,6 +25,8 @@ public class AppUrls {
   public static final String GET_ALL_HOBBIES = "/hobby/all";
 
   public static final String ADMIN_HOBBY = "/admin/hobby";
+  public static final String ADMIN_POST = "/admin/post";
+  public static final String ADMIN_COMMENT = "/admin/post/comment";
 
   private AppUrls(){
     // no-op

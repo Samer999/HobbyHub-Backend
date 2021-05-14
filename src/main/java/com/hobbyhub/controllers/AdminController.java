@@ -2,13 +2,15 @@ package com.hobbyhub.controllers;
 
 
 import com.hobbyhub.configuration.SecurityConfiguration;
+import com.hobbyhub.models.comments.Comment;
 import com.hobbyhub.models.hobbies.Hobby;
 import com.hobbyhub.models.hobbies.HobbyRequest;
 import com.hobbyhub.models.hobbies.HobbyService;
+import com.hobbyhub.models.posts.Post;
+import com.hobbyhub.models.posts.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,14 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AdminController {
-  @Autowired
-  private HobbyService hobbyService;
+  @Autowired private HobbyService hobbyService;
+  @Autowired private PostService postService;
 
-  @GetMapping(AppUrls.ADMIN_HOBBY+ "/{hobbyName}")
-  public Hobby getHobby(@PathVariable String hobbyName) {
-    checkAdmin();
-    return hobbyService.getHobbyByName(hobbyName);
-  }
 
   @PostMapping(AppUrls.ADMIN_HOBBY)
   public Hobby addHobby(@RequestBody HobbyRequest hobbyRequest) {
@@ -48,6 +45,24 @@ public class AdminController {
     Hobby hobby = hobbyService.getHobbyByName(hobbyName);
     hobbyService.deleteHobby(hobby);
     return hobby;
+  }
+
+  @DeleteMapping(AppUrls.ADMIN_POST + "/{postId}")
+  public Post deletePost(@PathVariable String postId) {
+    checkAdmin();
+    Post post = postService.getPostById(postId);
+    postService.deletePost(post, post.getCreatorUsername());
+    return post;
+  }
+
+  @DeleteMapping(AppUrls.ADMIN_COMMENT + "/{postId}/{commentId}")
+  public Post deleteComment(@PathVariable String postId, @PathVariable String commentId) {
+    checkAdmin();
+    Post post = postService.getPostById(postId);
+    Comment comment = post.getCommentById(commentId);
+    String username = comment.getCreatorUsername();
+    postService.removeComment(post, commentId, username);
+    return post;
   }
 
   private void populateHobbyInformation(Hobby hobby, HobbyRequest hobbyRequest) {
