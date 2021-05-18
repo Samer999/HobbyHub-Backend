@@ -1,5 +1,6 @@
-package com.hobbyhub.models.jwt;
+package com.hobbyhub.configuration;
 
+import com.hobbyhub.models.jwt.JwtUtils;
 import com.hobbyhub.models.users.UserService;
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Service
-public class JwtFilterRequest extends OncePerRequestFilter {
+public class JwtRequestFilter extends OncePerRequestFilter {
 
   @Autowired private JwtUtils jwtUtils;
 
