@@ -13,6 +13,7 @@ public class AppUrls {
   public static final String POST_TRENDING = "/post/trending";
 
   public static final String USER = "/user";
+  public static final String USER_ALL = "/users/all";
   public static final String USER_FEED = "/user/feed";
   public static final String USER_LOCATION = "/user/location";
   public static final String USER_FOLLOWING = "/user/following";

@@ -121,6 +121,10 @@ public class UserService implements UserDetailsService {
     return userRepository.count();
   }
 
+  public List<UserModel> getUsersList() {
+    return userRepository.findAll();
+  }
+
   private List<Post> getPostsByIds(List<String> postIds) {
     return postService.getPostsByIdIn(postIds);
   }

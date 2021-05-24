@@ -98,6 +98,11 @@ public class UserController {
     return userService.getFollowingUsers(userModel);
   }
 
+  @GetMapping(AppUrls.USER_ALL)
+  public List<UserModel> getUsersList() {
+    return userService.getUsersList();
+  }
+
   private void populateUpdatedUserInformation(UserModel userModel, UserRequest request) {
     String firstName = request.getFirstName();
     String lastName = request.getLastName();
