@@ -104,4 +104,12 @@ public class PostService {
     return posts.stream().filter(post -> post.getDateCreated().after(date7daysAgo))
         .sorted((Comparator.comparingInt(Post::getNumberOfLikes))).limit(10).collect(Collectors.toList());
   }
+
+  public long getPostsCount() {
+    return postRepository.count();
+  }
+
+  public long getPostsCountByCategoriesContaining(List <String> categories) {
+    return getPostsByCategoriesContaining(categories).size();
+  }
 }

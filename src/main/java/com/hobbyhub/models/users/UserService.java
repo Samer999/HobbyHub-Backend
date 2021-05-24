@@ -117,6 +117,10 @@ public class UserService implements UserDetailsService {
     return orderPostListByDate(removeDuplicatePosts(postLists));
   }
 
+  public long getUserCount() {
+    return userRepository.count();
+  }
+
   private List<Post> getPostsByIds(List<String> postIds) {
     return postService.getPostsByIdIn(postIds);
   }

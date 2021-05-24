@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends MongoRepository<UserModel, String> {
+  long count();
   UserModel getByUsername(String username);
   List<UserModel> getUserModelByUsernameIn(List<String> usernames);
 }

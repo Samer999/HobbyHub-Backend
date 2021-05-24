@@ -48,4 +48,8 @@ public class HobbyService {
     }
     return postService.getPostsByCategoriesContaining(Collections.singletonList(hobbyName));
   }
+
+  public long getHobbiesCount() {
+    return hobbyRepository.count();
+  }
 }
