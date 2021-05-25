@@ -5,11 +5,13 @@ import com.hobbyhub.models.comments.CommentRequest;
 import com.hobbyhub.models.posts.Post;
 import com.hobbyhub.models.posts.PostRequest;
 import com.hobbyhub.models.posts.PostService;
+import com.hobbyhub.models.responses.ErrorResponse;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,98 +27,101 @@ public class PostController {
   @Autowired private PostService postService;
 
   @GetMapping(AppUrls.POST + "/{postId}")
-  public Post getPost(@PathVariable String postId) {
-    return postService.getPostById(postId);
+  public ResponseEntity getPost(@PathVariable String postId) {
+    return ResponseEntity.ok(postService.getPostById(postId));
   }
 
   @PostMapping(AppUrls.POST)
-  public Post createPost(@RequestBody PostRequest postRequest) {
+  public ResponseEntity createPost(@RequestBody PostRequest postRequest) {
     Post newPost = new Post(SecurityContextHolder.getContext().getAuthentication().getName(), new Date());
     populatePostInformation(newPost, postRequest);
-    return postService.newPost(newPost);
+    return ResponseEntity.ok(postService.newPost(newPost));
   }
 
   @PutMapping(AppUrls.POST)
-  public Post updatePost(@RequestBody PostRequest postRequest) {
+  public ResponseEntity updatePost(@RequestBody PostRequest postRequest) {
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
     Post post = postService.getPostById(postRequest.getId());
     if (post == null) {
-      throw new NullPointerException("couldn't find a post with this id " + postRequest.getId());
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("couldn't find a post with this id "
+          + postRequest.getId()));
     }
     if (!isCreator(post, username)) {
-      throw new IllegalArgumentException(String.format("the post creatorUsername[%s] is different than the current "
-          + "SecurityContext[%s]", post.getCreatorUsername(), username));
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(String.format("the post "
+          + "creatorUsername[%s] is different than the current "
+          + "SecurityContext[%s]", post.getCreatorUsername(), username)));
     }
     populatePostInformation(post, postRequest);
-    return postService.update(post);
+    return ResponseEntity.ok(postService.update(post));
   }
 
   @DeleteMapping(AppUrls.POST + "/{postId}")
-  public Post deletePost(@PathVariable String postId) {
+  public ResponseEntity deletePost(@PathVariable String postId) {
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
     Post post = postService.getPostById(postId);
     try {
       postService.deletePost(post, username);
-    } catch (Exception e) {
+    } catch (IllegalArgumentException e) {
       e.printStackTrace();
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("not authorized to delete another "
+          + "users posts"));
     }
-    return post;
+    return ResponseEntity.ok(post);
   }
 
 
   @PostMapping(AppUrls.POST_LIKE)
-  public Post likePost(@RequestBody PostRequest postRequest) {
+  public ResponseEntity likePost(@RequestBody PostRequest postRequest) {
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
     Post post = postService.getPostById(postRequest.getId());
     try {
       postService.likePost(post, username);
     } catch (IllegalArgumentException e) {
       e.printStackTrace();
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(e.getMessage()));
     }
-    return post;
+    return ResponseEntity.ok(post);
   }
 
   @DeleteMapping(AppUrls.POST_LIKE + "/{postId}")
-  public Post unlikePost(@PathVariable String postId) {
+  public ResponseEntity unlikePost(@PathVariable String postId) {
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
     Post post = postService.getPostById(postId);
     try {
       postService.unlikePost(post, username);
     } catch (IllegalArgumentException e) {
       e.printStackTrace();
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(e.getMessage()));
     }
-    return post;
+    return ResponseEntity.ok(post);
   }
 
   @PostMapping(AppUrls.POST_COMMENT)
-  public Post addComment(@RequestBody CommentRequest commentRequest) {
+  public ResponseEntity addComment(@RequestBody CommentRequest commentRequest) {
     commentRequest.setCreatorUsername(SecurityContextHolder.getContext().getAuthentication().getName());
     Post post = postService.getPostById(commentRequest.getPostId());
     Comment comment = new Comment();
     populateCommentInformation(comment, commentRequest);
-    try {
-      postService.addComment(post, comment);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return post;
+    postService.addComment(post, comment);
+    return ResponseEntity.ok(post);
   }
 
   @DeleteMapping(AppUrls.POST_COMMENT + "/{postId}/{commentId}")
-  public Post removeComment(@PathVariable String postId, @PathVariable String commentId) {
+  public ResponseEntity removeComment(@PathVariable String postId, @PathVariable String commentId) {
     Post post = postService.getPostById(postId);
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
     try {
       postService.removeComment(post, commentId, username);
-    } catch (Exception e) {
+    } catch (IllegalArgumentException e) {
       e.printStackTrace();
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(e.getMessage()));
     }
-    return post;
+    return ResponseEntity.ok(post);
   }
 
   @GetMapping(AppUrls.POST_TRENDING)
-  public List<Post> getTrending() {
-    return postService.getTrending();
+  public ResponseEntity getTrending() {
+    return ResponseEntity.ok(postService.getTrending());
   }
 
   private void populateCommentInformation(Comment comment, CommentRequest commentRequest) {

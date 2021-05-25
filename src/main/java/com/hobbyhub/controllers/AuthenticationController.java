@@ -1,7 +1,7 @@
 package com.hobbyhub.controllers;
 
 import com.hobbyhub.models.jwt.JwtUtils;
-import com.hobbyhub.models.users.AuthenticationResponse;
+import com.hobbyhub.models.responses.AuthenticationResponse;
 import com.hobbyhub.models.users.SignInRequest;
 import com.hobbyhub.models.users.SignUpRequest;
 import com.hobbyhub.models.users.UserModel;

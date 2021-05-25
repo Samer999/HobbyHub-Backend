@@ -1,5 +1,6 @@
-package com.hobbyhub.models.users;
+package com.hobbyhub.models.responses;
 
+import com.hobbyhub.models.users.UserModel;
 import lombok.Data;
 
 @Data
