@@ -125,6 +125,23 @@ public class UserService implements UserDetailsService {
     return userRepository.findAll();
   }
 
+  public void suspendUser(String username) {
+    UserModel user = userRepository.getByUsername(username);
+    user.setSuspended(true);
+    updateUser(user);
+  }
+
+  public void unsuspendUser(String username) {
+    UserModel user = userRepository.getByUsername(username);
+    user.setSuspended(false);
+    updateUser(user);
+  }
+
+  public boolean isUserSuspended(String username) {
+    UserModel user = userRepository.getByUsername(username);
+    return user.isSuspended() != null && user.isSuspended();
+  }
+
   private List<Post> getPostsByIds(List<String> postIds) {
     return postService.getPostsByIdIn(postIds);
   }

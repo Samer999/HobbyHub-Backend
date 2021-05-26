@@ -8,6 +8,9 @@ import com.hobbyhub.models.hobbies.HobbyRequest;
 import com.hobbyhub.models.hobbies.HobbyService;
 import com.hobbyhub.models.posts.Post;
 import com.hobbyhub.models.posts.PostService;
+import com.hobbyhub.models.users.UserModel;
+import com.hobbyhub.models.users.UserRequest;
+import com.hobbyhub.models.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
   @Autowired private HobbyService hobbyService;
   @Autowired private PostService postService;
+  @Autowired private UserService userService;
 
 
   @PostMapping(AppUrls.ADMIN_HOBBY)
@@ -63,6 +67,20 @@ public class AdminController {
     String username = comment.getCreatorUsername();
     postService.removeComment(post, commentId, username);
     return post;
+  }
+
+  @PutMapping(AppUrls.ADMIN_USER_SUSPEND)
+  public UserModel suspendUser(@RequestBody UserRequest userRequest) {
+    String username = userRequest.getUsername();
+    userService.suspendUser(username);
+    return userService.getUserModel(username);
+  }
+
+  @PutMapping(AppUrls.ADMIN_USER_UNSUSPEND)
+  public UserModel unsuspendUser(@RequestBody UserRequest userRequest) {
+    String username = userRequest.getUsername();
+    userService.unsuspendUser(username);
+    return userService.getUserModel(username);
   }
 
   private void populateHobbyInformation(Hobby hobby, HobbyRequest hobbyRequest) {

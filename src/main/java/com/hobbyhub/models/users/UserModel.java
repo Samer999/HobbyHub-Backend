@@ -23,6 +23,7 @@ public class UserModel {
   private List<String> followers;
   private List<String> hobbiesFollowing;
   private List<String> posts;
+  private Boolean isSuspended;
 
   public String getId() {
     return id;
@@ -166,5 +167,13 @@ public class UserModel {
 
   public boolean removePost(String postId) {
     return posts.remove(postId);
+  }
+
+  public Boolean isSuspended() {
+    return isSuspended;
+  }
+
+  public void setSuspended(Boolean suspended) {
+    isSuspended = suspended;
   }
 }

@@ -39,7 +39,15 @@ public class AuthenticationController {
     try {
       authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(username, password));
-    } catch (Exception e) {
+      if (userService.isUserSuspended(username)) {
+        throw new IllegalArgumentException();
+      }
+    } catch (IllegalArgumentException e) {
+      e.printStackTrace();
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+          new AuthenticationResponse("This username is suspended: " + username));
+    }
+    catch (Exception e) {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
           new AuthenticationResponse("Error during client authentication " + username));

@@ -28,6 +28,8 @@ public class AppUrls {
   public static final String ADMIN_HOBBY = "/admin/hobby";
   public static final String ADMIN_POST = "/admin/post";
   public static final String ADMIN_COMMENT = "/admin/post/comment";
+  public static final String ADMIN_USER_SUSPEND = "/admin/user/suspend";
+  public static final String ADMIN_USER_UNSUSPEND = "/admin/user/unsuspend";
 
   public static final String ANALYTICS_POSTS_NUMBER = "/analytics/posts-number";
   public static final String ANALYTICS_USERS_NUMBER = "/analytics/users-number";
