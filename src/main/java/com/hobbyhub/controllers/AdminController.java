@@ -73,6 +73,7 @@ public class AdminController {
 
   @PutMapping(AppUrls.ADMIN_USER_SUSPEND)
   public UserModel suspendUser(@RequestBody UserRequest userRequest) {
+    checkAdmin();
     String username = userRequest.getUsername();
     userService.suspendUser(username);
     return userService.getUserModel(username);
@@ -80,6 +81,7 @@ public class AdminController {
 
   @PutMapping(AppUrls.ADMIN_USER_UNSUSPEND)
   public UserModel unsuspendUser(@RequestBody UserRequest userRequest) {
+    checkAdmin();
     String username = userRequest.getUsername();
     userService.unsuspendUser(username);
     return userService.getUserModel(username);
@@ -87,6 +89,7 @@ public class AdminController {
 
   @GetMapping(AppUrls.ADMIN_ALL_POST)
   public List<Post> getAllPosts() {
+    checkAdmin();
     return postService.getAllPosts();
   }
 
