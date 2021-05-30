@@ -102,7 +102,8 @@ public class PostService {
     Date date7daysAgo = new Date(System.currentTimeMillis() - (7 * DAY_IN_MS));
     List<Post> posts = postRepository.findAll();
     return posts.stream().filter(post -> post.getDateCreated().after(date7daysAgo))
-        .sorted((Comparator.comparingInt(Post::getNumberOfLikes))).limit(10).collect(Collectors.toList());
+        .sorted((post1, post2) -> post2.getNumberOfLikes() - post1.getNumberOfLikes())
+        .limit(10).collect(Collectors.toList());
   }
 
   public long getPostsCount() {
