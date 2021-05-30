@@ -112,4 +112,8 @@ public class PostService {
   public long getPostsCountByCategoriesContaining(List <String> categories) {
     return getPostsByCategoriesContaining(categories).size();
   }
+
+  public List<Post> getAllPosts() {
+    return postRepository.findAll();
+  }
 }

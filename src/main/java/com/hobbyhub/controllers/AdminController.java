@@ -11,9 +11,11 @@ import com.hobbyhub.models.posts.PostService;
 import com.hobbyhub.models.users.UserModel;
 import com.hobbyhub.models.users.UserRequest;
 import com.hobbyhub.models.users.UserService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -81,6 +83,11 @@ public class AdminController {
     String username = userRequest.getUsername();
     userService.unsuspendUser(username);
     return userService.getUserModel(username);
+  }
+
+  @GetMapping(AppUrls.ADMIN_ALL_POST)
+  public List<Post> getAllPosts() {
+    return postService.getAllPosts();
   }
 
   private void populateHobbyInformation(Hobby hobby, HobbyRequest hobbyRequest) {
